@@ -23,6 +23,8 @@
             --card-width: 130px;
             --card-height: 195px;
             --transition-main: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            --app-height: 100dvh;
+            /* Fallback awal */
         }
 
         body,
@@ -35,14 +37,19 @@
             background-color: #1a1a1a;
             font-family: 'Outfit', sans-serif;
             user-select: none;
+            overscroll-behavior: none;
+            /* Mencegah pull-to-refresh di mobile */
         }
 
         /* --- MEJA PERMAINAN --- */
         .table-surface {
-            position: relative;
+            position: fixed;
+            /* Mengunci layout agar tidak tergeser scroll browser */
+            inset: 0;
+            /* Memaksa elemen menempel ke 4 sisi layar */
             width: 100vw;
-            height: 100vh;
-            height: 100dvh;
+            height: var(--app-height);
+            /* Menggunakan tinggi dinamis dari JS */
             /* Fix untuk mobile browser address bar */
 
             /* Safe Area Insets untuk HP Poni/Notch & Gesture Bar */
