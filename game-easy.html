@@ -42,6 +42,8 @@
             position: relative;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
+            /* Fix untuk mobile browser address bar */
             /* UNO Red Gradient Background */
             background: radial-gradient(circle at center, #b91c1c 0%, #500a0a 100%);
             display: flex;
@@ -301,10 +303,17 @@
             display: flex;
         }
 
-        .pause-btn {
+        /* --- CONTROLS (FULLSCREEN & PAUSE) --- */
+        .top-controls {
             position: fixed;
             top: 25px;
             right: 25px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .control-btn {
             width: 60px;
             height: 60px;
             background: #fff;
@@ -315,8 +324,13 @@
             justify-content: center;
             font-size: 1.5rem;
             cursor: pointer;
-            z-index: 1000;
             color: #000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
         }
 
         /* --- Notification History --- */
@@ -555,11 +569,39 @@
             }
 
             .center-pile {
-                gap: 50px;
+                gap: 20px;
+                /* Kurangi gap agar muat di layar kecil */
             }
 
             .player-hand .card {
-                margin-left: -40px;
+                margin-left: -45px;
+                /* Sesuaikan overlap player */
+            }
+
+            /* FIX: Sesuaikan overlap bot agar tidak menumpuk 100% */
+            .bot-hand .card {
+                margin-left: -55px;
+            }
+
+            /* FIX: Kurangi margin vertikal agar tidak kepotong */
+            .mb-8 {
+                margin-bottom: 0.5rem !important;
+            }
+
+            .mt-8 {
+                margin-top: 0.5rem !important;
+            }
+
+            .top-controls {
+                top: 10px;
+                right: 10px;
+            }
+
+            .control-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+                border-width: 3px;
             }
         }
 
@@ -624,7 +666,11 @@
         <img src="./img/Logo.png" class="uno-logo-bg" alt="UNO Logo">
         <div class="table-accent-right"></div>
 
-        <div class="pause-btn" onclick="togglePause()"><i class="fas fa-bars"></i></div>
+        <!-- Top Controls: Fullscreen & Pause -->
+        <div class="top-controls">
+            <div class="control-btn" onclick="toggleFullscreen()" id="fs-btn"><i class="fas fa-expand"></i></div>
+            <div class="control-btn" onclick="togglePause()"><i class="fas fa-bars"></i></div>
+        </div>
 
         <!-- Notification History Log -->
         <div id="history-log">
@@ -676,7 +722,8 @@
         <div class="menu-card">
             <h2 class="text-5xl font-black italic mb-8">PAUSED</h2>
             <button class="btn-action bg-yellow-400" onclick="togglePause()">RESUME</button>
-            <button class="btn-action bg-blue-400" onclick="location.reload()">RESTART</button><button class="btn-action bg-red-500" onclick="window.location.href='./index.html'">MAIN MENU</button>
+            <button class="btn-action bg-blue-400" onclick="location.reload()">RESTART</button><button
+                class="btn-action bg-red-500" onclick="window.location.href='./index.html'">MAIN MENU</button>
 
             <div class="bgm-control">
                 <button id="bgmToggle" class="text-2xl"><i class="fas fa-volume-up"></i></button>
@@ -1459,6 +1506,36 @@
             const m = document.getElementById('pause-modal');
             m.classList.toggle('active');
         }
+
+        // --- FULLSCREEN LOGIC ---
+        function toggleFullscreen() {
+            const elem = document.documentElement;
+            const btnIcon = document.querySelector('#fs-btn i');
+
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) { /* Safari */
+                    elem.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { /* Safari */
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+
+        // Update Icon saat status fullscreen berubah (misal tekan ESC)
+        document.addEventListener('fullscreenchange', () => {
+            const btnIcon = document.querySelector('#fs-btn i');
+            if (document.fullscreenElement) {
+                btnIcon.classList.replace('fa-expand', 'fa-compress');
+            } else {
+                btnIcon.classList.replace('fa-compress', 'fa-expand');
+            }
+        });
 
         function endGame(winner) {
             gameActive = false;
