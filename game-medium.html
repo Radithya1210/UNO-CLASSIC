@@ -592,56 +592,59 @@
         /* Mobile Landscape Guard */
         @media (max-height: 500px) {
             :root {
-                --card-width: 80px;
-                --card-height: 120px;
+                --card-width: 60px;
+                --card-height: 90px;
             }
 
             .center-pile {
-                gap: 20px;
-                /* Kurangi gap agar muat di layar kecil */
+                gap: 15px;
             }
 
             .player-hand .card {
-                margin-left: -45px;
-                /* Sesuaikan overlap player */
+                margin-left: -35px;
             }
 
-            /* FIX: Sesuaikan overlap bot agar tidak menumpuk 100% */
             .bot-hand .card {
-                margin-left: -55px;
+                margin-left: -40px;
             }
 
-            /* FIX: Kurangi margin vertikal agar tidak kepotong */
             .mb-8 {
-                margin-bottom: 0.5rem !important;
+                margin-bottom: 0.2rem !important;
             }
 
             .mt-8 {
-                margin-top: 0.5rem !important;
+                margin-top: 0.2rem !important;
             }
 
             .top-controls {
-                top: 10px;
+                top: 5px;
                 right: 10px;
+                gap: 8px;
             }
 
             .control-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
                 border-width: 2px;
+                border-radius: 8px;
             }
 
             .player-info {
-                font-size: 0.9rem;
-                padding: 4px 12px;
-                margin-top: 2px;
+                font-size: 0.65rem;
+                padding: 2px 8px;
+                margin-top: 1px;
+                border-width: 0.5px;
+            }
+
+            .difficulty-badge {
+                font-size: 0.5rem;
+                padding: 1px 4px;
             }
 
             .uno-logo-bg {
-                width: 120px;
-                /* Perkecil logo background */
-                opacity: 0.2;
+                width: 80px;
+                opacity: 0.15;
             }
         }
 
