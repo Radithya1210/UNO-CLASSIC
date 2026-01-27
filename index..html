@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, orientation=landscape">
+    <title>UNO CLASSIC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="./img/Logo.png" type="image/png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&family=Outfit:wght@300;400;600;800&display=swap');
+
+        :root {
+            --uno-gray: #e0e0e0;
+            --uno-border: #bcbcbc;
+            --uno-red: #d72600;
+            --uno-blue: #0063b1;
+            --uno-yellow: #f5b500;
+            --uno-green: #379711;
+            --uno-brown: #8b4513;
+            --card-width: 130px;
+            --card-height: 195px;
+            --transition-main: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            --app-height: 100dvh;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            font-family: 'Outfit', sans-serif;
+            user-select: none;
+            overscroll-behavior: none;
+        }
+
+        .meja-permainan {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: var(--app-height);
+
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            background: radial-gradient(circle at center, #be0808 0%, #1a0707 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+
+        .meja-permainan::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .meja-permainan::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 15px;
+            background: linear-gradient(to bottom, #ff5555 25%, #5555ff 25%, #5555ff 50%, #55aa55 50%, #55aa55 75%, #ffaa00 75%);
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+            z-index: 50;
+        }
+
+        .hiasan-meja-kanan {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 15px;
+            background: linear-gradient(to bottom, #ffaa00 25%, #55aa55 25%, #55aa55 50%, #5555ff 50%, #5555ff 75%, #ff5555 75%);
+            box-shadow: -2px 0 15px rgba(0, 0, 0, 0.3);
+            z-index: 50;
+        }
+
+        .logo-uno-latar {
+            position: absolute;
+            top: 50%;
+            right: 5%;
+            transform: translateY(-50%);
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .kartu {
+            width: var(--card-width);
+            height: var(--card-height);
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 4px solid #fff;
+            position: relative;
+            flex-shrink: 0;
+            background-color: #fff;
+            transition: var(--transition-main);
+        }
+
+        .area-tangan-pemain .kartu {
+            cursor: pointer;
+            margin-left: -65px;
+        }
+
+        .area-tangan-pemain .kartu:first-child {
+            margin-left: 0;
+        }
+
+        .area-tangan-pemain .kartu:hover {
+            transform: translateY(-50px) scale(1.1) rotate(2deg);
+            z-index: 100 !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .area-tangan-bot .kartu {
+            margin-left: -80px;
+        }
+
+        .area-tangan-bot .kartu:first-child {
+            margin-left: 0;
+        }
+
+        .area-tengah {
+            display: flex;
+            align-items: center;
+            z-index: 10;
+            width: 100%;
+            justify-content: center;
+            position: relative;
+        }
+
+        .dek-ambil {
+            position: absolute;
+            left: 10%;
+            width: var(--card-width);
+            height: var(--card-height);
+            cursor: pointer;
+        }
+
+        .alas-dek-ambil {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #222;
+            border-radius: 12px;
+            border: 1px solid #444;
+            box-shadow:
+                1px 1px 0 #eee, 2px 2px 0 #333,
+                3px 3px 0 #eee, 4px 4px 0 #333,
+                5px 5px 0 #eee, 6px 6px 0 #333,
+                7px 7px 0 #eee, 8px 8px 0 #111,
+                10px 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .dek-buang {
+            position: relative;
+            width: var(--card-width);
+            height: var(--card-height);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .dek-buang .kartu {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .pesan-notif {
+            position: fixed;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-style: italic;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+
+            padding: 15px 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 320px;
+            justify-content: center;
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow:
+                0 15px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
+            z-index: 2000;
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            overflow: hidden;
+        }
+
+        .pesan-notif::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: currentColor;
+            box-shadow: 0 -2px 12px currentColor;
+            opacity: 0.8;
+        }
+
+        .pesan-notif img {
+            width: 50px;
+            height: auto;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+        }
+
+        .pesan-notif.tampil {
+            top: 30px;
+            transform: translateX(-50%) scale(1);
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .pesan-notif.tipe-hukuman {
+            color: #ff4444;
+            text-shadow: 0 0 20px rgba(255, 68, 68, 0.4);
+        }
+
+        .pesan-notif.tipe-giliran {
+            color: #44ff44;
+            text-shadow: 0 0 20px rgba(68, 255, 68, 0.4);
+        }
+
+        .pesan-notif.tipe-sukses {
+            color: #00ffaa;
+            text-shadow: 0 0 20px rgba(0, 255, 170, 0.4);
+        }
+
+        .pesan-notif.tipe-uno {
+            color: #ffaa00;
+            text-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
+        }
+
+        .pesan-notif.tipe-info {
+            color: #4488ff;
+            text-shadow: 0 0 20px rgba(68, 136, 255, 0.4);
+        }
+
+        .layar-penuh {
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            display: none;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        .layar-penuh.tampil {
+            display: flex;
+        }
+
+        .tombol-atas {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .tombol-utilitas {
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            border: 4px solid #000;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .tombol-utilitas:active {
+            transform: scale(0.95);
+        }
+
+        #catatan-log {
+            position: fixed;
+            top: -320px;
+            left: 20px;
+            z-index: 1500;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            transition: top 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        #catatan-log.tampil {
+            top: 0;
+        }
+
+        .tombol-log {
+            width: 50px;
+            height: 40px;
+            background: #fff;
+            border: 4px solid #000;
+            border-top: none;
+            border-radius: 0 0 25px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #000;
+            margin-left: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+        }
+
+        .tombol-log:hover {
+            background-color: #f0f0f0;
+        }
+
+        #isi-log {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 15px;
+            width: 300px;
+            height: 320px;
+            overflow-y: auto;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-top: none;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        #catatan-log.tampil .tombol-log i {
+            transform: rotate(180deg);
+        }
+
+        .entri-log {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.85rem;
+            opacity: 0.6;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .entri-log:last-child {
+            border-bottom: none;
+        }
+
+        .entri-log.baru {
+            opacity: 1;
+            color: #fff;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            border-bottom: none;
+        }
+
+        .waktu-log {
+            font-size: 0.7rem;
+            color: #aaa;
+            margin-left: 10px;
+        }
+
+        .menu-popup {
+            background: #fff;
+            color: #000;
+            padding: 40px;
+            border-radius: 20px;
+            width: 450px;
+            text-align: center;
+            border: 10px solid #000;
+        }
+
+        .tombol-pilihan {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            font-weight: 900;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            border: 5px solid #000;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tombol-pilihan:hover {
+            transform: scale(1.05);
+            background: #000;
+            color: #fff;
+        }
+
+        .animasi-kartu-terbang {
+            position: absolute;
+            z-index: 1000;
+            pointer-events: none;
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .angka-mundur {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: clamp(6rem, 20vw, 15rem);
+            animation: pulse-zoom 1s infinite;
+            text-align: center;
+        }
+
+        .teks-kocok {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            animation: shuffle-pulse 1.2s infinite ease-in-out;
+            text-transform: uppercase;
+        }
+
+        @keyframes shuffle-pulse {
+            0% {
+                opacity: 0.3;
+                transform: scale(0.95);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0.3;
+                transform: scale(0.95);
+            }
+        }
+
+        @keyframes pulse-zoom {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+
+        .info-status-pemain {
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.7rem;
+            margin-top: 10px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .label-level {
+            background: rgba(255, 255, 255, 0.15);
+            color: inherit;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 900;
+            font-size: 0.55rem;
+            border: none;
+            opacity: 0.9;
+            line-height: 1;
+        }
+
+        .status-giliran-aktif {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-giliran-pasif {
+            background: rgba(0, 0, 0, 0.6);
+            color: rgba(255, 255, 255, 0.5);
+            border-color: transparent;
+        }
+
+        .pengaturan-musik {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #bgmVolume {
+            accent-color: #000;
+            flex-grow: 1;
+        }
+
+        @media (max-height: 500px) {
+            :root {
+                --card-width: 60px;
+                --card-height: 90px;
+            }
+
+            .area-tengah {
+                gap: 15px;
+            }
+
+            .area-tangan-pemain .kartu {
+                margin-left: -35px;
+            }
+
+            .area-tangan-bot .kartu {
+                margin-left: -40px;
+            }
+
+            .mb-8 {
+                margin-bottom: 0.2rem !important;
+            }
+
+            .mt-8 {
+                margin-top: 0.2rem !important;
+            }
+
+            .tombol-atas {
+                top: 5px;
+                right: 10px;
+                gap: 8px;
+            }
+
+            .tombol-utilitas {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+                border-width: 2px;
+                border-radius: 8px;
+            }
+
+            .info-status-pemain {
+                font-size: 0.65rem;
+                padding: 2px 8px;
+                margin-top: 1px;
+                border-width: 0.5px;
+            }
+
+            .label-level {
+                font-size: 0.5rem;
+                padding: 1px 4px;
+            }
+
+            .logo-uno-latar {
+                width: 80px;
+                opacity: 0.15;
+            }
+        }
+
+        #peringatan-putar {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #1a1a1a;
+            color: white;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        #peringatan-putar i {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: rotate-icon-anim 2.5s ease-in-out infinite;
+        }
+
+        @keyframes rotate-icon-anim {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(90deg);
+            }
+        }
+
+        .indikator-ngetik::after {
+            content: '';
+            animation: anim-ngetik 1.5s infinite steps(4);
+        }
+
+        @keyframes anim-ngetik {
+            0% {
+                content: "";
+            }
+
+            25% {
+                content: ".";
+            }
+
+            50% {
+                content: "..";
+            }
+
+            75% {
+                content: "...";
+            }
+
+            100% {
+                content: "....";
+            }
+        }
+
+        @media (orientation: portrait) {
+
+            .meja-permainan,
+            .pause-btn {
+                display: none;
+            }
+
+            #peringatan-putar {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            #fs-btn {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="layar-pembuka" class="layar-penuh tampil">
+        <div id="teks-hitung-mundur" class="angka-mundur">3</div>
+    </div>
+
+    <div class="meja-permainan">
+        <img src="./img/Logo.png" class="logo-uno-latar" alt="UNO Logo">
+        <div class="hiasan-meja-kanan"></div>
+
+        <div class="tombol-atas">
+            <div class="tombol-utilitas" onclick="gantiLayarPenuh()" id="fs-btn"><i class="fas fa-expand"></i></div>
+            <div class="tombol-utilitas" onclick="jedaGame()"><i class="fas fa-bars"></i></div>
+        </div>
+
+        <div id="catatan-log">
+            <div id="isi-log"></div>
+            <div id="tombol-log" class="tombol-log">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-center mt-8">
+            <div id="area-tangan-bot" class="tangan-kartu area-tangan-bot flex"></div>
+            <div id="info-bot" class="info-status-pemain status-giliran-pasif">Komputer<span id="indikator-berpikir"
+                    class="ml-1 hidden"></span></div>
+        </div>
+
+        <div class="area-tengah">
+            <div class="dek-ambil" onclick="pemainKlikAmbilKartu()">
+                <div class="alas-dek-ambil"></div>
+                <img src="./img/UNO/Behind Kartu.png" class="w-full h-full object-cover rounded-lg">
+            </div>
+
+            <div id="area-dek-buang" class="dek-buang">
+                <i
+                    class="fas fa-layer-group absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white opacity-20 text-4xl"></i>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-center mb-8">
+            <div id="info-pemain" class="info-status-pemain status-giliran-pasif">PEMAIN</div>
+            <div id="area-tangan-pemain" class="tangan-kartu area-tangan-pemain flex"></div>
+        </div>
+    </div>
+
+    <div id="pesan-notif" class="pesan-notif">
+        <img src="./img/Logo.png" width="50">
+        <span id="teks-notif"></span>
+    </div>
+
+    <div id="popup-jeda" class="layar-penuh">
+        <div class="menu-popup">
+            <h2 class="text-5xl font-black italic mb-8">DIJEDA</h2>
+            <button class="tombol-pilihan bg-yellow-400" onclick="jedaGame()">LANJUT</button>
+            <button class="tombol-pilihan bg-blue-400" onclick="location.reload()">ULANGI</button><button
+                class="tombol-pilihan bg-red-500" onclick="window.location.href='#'">MENU UTAMA</button>
+
+            <div class="pengaturan-musik">
+                <button id="bgmToggle" class="text-2xl"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="bgmVolume" min="0" max="100" value="50">
+                <span id="bgmValue" class="font-bold">50%</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup-pilih-warna" class="layar-penuh">
+        <div class="menu-popup">
+            <h2 class="text-3xl font-black mb-6">PILIH WARNA</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <button class="p-8 bg-red-600 rounded-lg" onclick="pilihWarnaWild('MERAH')"></button>
+                <button class="p-8 bg-blue-600 rounded-lg" onclick="pilihWarnaWild('BIRU')"></button>
+                <button class="p-8 bg-green-600 rounded-lg" onclick="pilihWarnaWild('IJO')"></button>
+                <button class="p-8 bg-yellow-400 rounded-lg" onclick="pilihWarnaWild('KUNING')"></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup-tantangan" class="layar-penuh">
+        <div class="menu-popup">
+            <h2 class="text-3xl font-black mb-6">KOMPUTER KELUARIN +4</h2>
+            <p class="mb-8 font-semibold">Berani nantang? Kalau gagal, kamu ambil 6 kartu!</p>
+            <button class="tombol-pilihan bg-yellow-400" onclick="prosesTantangan(false)">AMBIL 4 KARTU</button>
+            <button class="tombol-pilihan bg-blue-500" onclick="prosesTantangan(true)">TANTANG!</button>
+        </div>
+    </div>
+
+    <div id="peringatan-putar">
+        <i class="fas fa-mobile-alt"></i>
+        <h2 class="text-2xl font-black mb-4">PUTAR DULU HP-NYA</h2>
+        <p class="font-semibold">Mainnya mode miring (landscape) biar lebih asik.</p>
+    </div>
+
+    <div id="popup-menang" class="layar-penuh">
+        <div class="menu-popup">
+            <h1 id="judul-kemenangan" class="text-6xl font-black italic text-red-600 mb-4">MENANG!</h1>
+            <p id="subjudul-kemenangan" class="mb-8 font-bold text-gray-500">NIH, KARTU LAWAN KEBUKA</p>
+            <button class="tombol-pilihan bg-green-500" onclick="location.reload()">MAIN LAGI</button>
+            <button class="tombol-pilihan bg-gray-200" onclick="window.location.href='#'">KE MENU UTAMA</button>
+        </div>
+    </div>
+
+    <audio id="bgm" src="./music/Uno Mobile music ost - BGM 3 Hurry up.mp3" loop></audio>
+
+    <script>
+
+        const KONFIGURASI = {
+            DURASI_ANIMASI: 600,
+            DELAY_BOT: { MIN: 1000, MAX: 4000 },
+            PELUANG_SALAH_BOT: 0.15,
+            WARNA: ["IJO", "BIRU", "KUNING", "MERAH"],
+            TIPE_KARTU: {
+                SKIP: "skip",
+                REVERSE: "reverse",
+                DRAW2: "draw2",
+                DRAW4: "draw4",
+                WILD: "wild",
+                ANGKA_67: "67",
+                HITAM: "HITAM"
+            }
+        };
+
+        const state = {
+            dek: [],
+            tangan: {
+                player: [],
+                bot: []
+            },
+            dekBuangan: [],
+            status: {
+                jalan: false,
+                giliranPemain: false,
+                lagiSibuk: false,
+                notifNgetem: false
+            },
+            kartuAktif: {
+                warna: "",
+                nilai: ""
+            },
+            infoTantangan: {},
+            riwayatLog: [],
+            nilaiWildNunggu: ""
+        };
+
+        function bikinDekBaru() {
+            const dekPenuh = [];
+
+            KONFIGURASI.WARNA.forEach(color => {
+                dekPenuh.push({ color, value: "0", img: `./img/UNO/0 ${color}.png` });
+                for (let i = 1; i <= 9; i++) {
+                    const kartuAngka = { color, value: i.toString(), img: `./img/UNO/${i} ${color}.png` };
+                    dekPenuh.push(kartuAngka, kartuAngka);
+                }
+
+                const kartuAksi = [
+                    { value: "skip", img: `./img/UNO/block ${color}.png` },
+                    { value: "reverse", img: `./img/UNO/reverse ${color}.png` },
+                    { value: "draw2", img: `./img/UNO/+2 ${color}.png` }
+                ];
+
+                kartuAksi.forEach(aksi => {
+                    dekPenuh.push({ color, value: aksi.value, img: aksi.img });
+                    dekPenuh.push({ color, value: aksi.value, img: aksi.img });
+                });
+            });
+
+            for (let k = 0; k < 4; k++) {
+                dekPenuh.push({ color: KONFIGURASI.TIPE_KARTU.HITAM, value: "wild", img: "./img/UNO/change color HITAM.png" });
+                dekPenuh.push({ color: KONFIGURASI.TIPE_KARTU.HITAM, value: "draw4", img: "./img/UNO/+4 HITAM.png" });
+            }
+
+            if (Math.random() < 0.5) {
+                dekPenuh.push({ color: KONFIGURASI.TIPE_KARTU.HITAM, value: "67", img: "./img/UNO/67 HITAM.png" });
+            }
+
+            return kocokDek(dekPenuh);
+        }
+
+        function kocokDek(array) {
+            let currentIndex = array.length, temporaryValue, randomIndex;
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+            return array;
+        }
+
+
+        async function mulaiGame() {
+            const cd = document.getElementById('teks-hitung-mundur');
+            for (let i = 3; i > 0; i--) {
+                cd.innerText = i;
+                await tunggu(1000);
+            }
+
+            cd.className = 'teks-kocok';
+            cd.innerText = "SHUFFLING...";
+            await animasiNgocok();
+
+            state.dek = bikinDekBaru();
+
+            const starter = Math.random() > 0.5 ? 'player' : 'bot';
+            seimbanginKartuAwal(starter);
+            await bagiKartuAwal(starter);
+
+            jalaninGame(starter);
+        }
+
+        async function animasiNgocok() {
+            const intro = document.getElementById('layar-pembuka');
+            for (let i = 0; i < 12; i++) {
+                const dummy = document.createElement('div');
+                dummy.className = 'kartu animasi-kartu-terbang';
+                dummy.style.backgroundImage = "url('./img/UNO/Behind Kartu.png')";
+                dummy.style.left = "50%";
+                dummy.style.top = "50%";
+                dummy.style.transform = "translate(-50%, -50%)";
+                intro.appendChild(dummy);
+
+                await tunggu(70);
+                dummy.style.transform = `translate(-50%, ${i % 2 === 0 ? '-180%' : '80%'}) rotate(${Math.random() * 40 - 20}deg)`;
+                setTimeout(() => dummy.remove(), 400);
+            }
+            await tunggu(300);
+            intro.classList.remove('tampil');
+        }
+
+        function seimbanginKartuAwal(starter) {
+            const deckSize = state.dek.length;
+            const playerIndices = [];
+            const botIndices = [];
+
+            let current = starter;
+            for (let i = 0; i < 14; i++) {
+                const idx = deckSize - 1 - i;
+                if (current === 'player') {
+                    playerIndices.push(idx);
+                    current = 'bot';
+                } else {
+                    botIndices.push(idx);
+                    current = 'player';
+                }
+            }
+
+            const getWeight = (card) => {
+                if (card.color === KONFIGURASI.TIPE_KARTU.HITAM) return 2;
+                if (isNaN(parseInt(card.value))) return 1;
+                return 0;
+            };
+
+            let playerScore = playerIndices.reduce((sum, idx) => sum + getWeight(state.dek[idx]), 0);
+            let botScore = botIndices.reduce((sum, idx) => sum + getWeight(state.dek[idx]), 0);
+
+            if (botScore > playerScore) {
+                for (let i = 0; i < botIndices.length; i++) {
+                    const botCardIdx = botIndices[i];
+                    if (getWeight(state.dek[botCardIdx]) > 0) {
+                        for (let k = 0; k < deckSize - 14; k++) {
+                            if (getWeight(state.dek[k]) === 0) {
+                                [state.dek[botCardIdx], state.dek[k]] = [state.dek[k], state.dek[botCardIdx]];
+                                botScore -= getWeight(state.dek[k]);
+                                break;
+                            }
+                        }
+                    }
+                    if (botScore <= playerScore) break;
+                }
+            }
+        }
+
+        async function bagiKartuAwal(firstReceiver) {
+            let current = firstReceiver;
+
+            for (let i = 0; i < 14; i++) {
+                await animasiBagiKartu(current);
+                current = current === 'player' ? 'bot' : 'player';
+                await tunggu(250);
+            }
+        }
+
+        async function animasiBagiKartu(target) {
+            const cardData = state.dek.pop();
+            const startPos = document.querySelector('.dek-ambil').getBoundingClientRect();
+            const endTarget = document.getElementById(target === 'player' ? 'area-tangan-pemain' : 'area-tangan-bot');
+
+            const cardEl = document.createElement('div');
+            cardEl.className = 'kartu animasi-kartu-terbang';
+            cardEl.style.backgroundImage = "url('./img/UNO/Behind Kartu.png')";
+            cardEl.style.left = startPos.left + "px";
+            cardEl.style.top = startPos.top + "px";
+            document.body.appendChild(cardEl);
+
+            const handPos = endTarget.getBoundingClientRect();
+            await tunggu(50);
+
+            cardEl.style.left = (handPos.left + (handPos.width / 2) - 65) + "px";
+            cardEl.style.top = handPos.top + "px";
+            cardEl.style.transform = "scale(0.8)";
+
+            if (target === 'player') state.tangan.player.push(cardData);
+            else state.tangan.bot.push(cardData);
+
+            await tunggu(500);
+            cardEl.remove();
+            tampilinKartuTangan();
+        }
+
+        function jalaninGame(starter) {
+            let firstCard = state.dek.pop();
+            while (firstCard.color === KONFIGURASI.TIPE_KARTU.HITAM) {
+                state.dek.unshift(firstCard);
+                kocokDek(state.dek);
+                firstCard = state.dek.pop();
+            }
+
+            state.dekBuangan.push(firstCard);
+            state.kartuAktif.warna = firstCard.color;
+            state.kartuAktif.nilai = firstCard.value;
+
+            state.status.jalan = true;
+            state.status.giliranPemain = (starter === 'player');
+
+            tampilinKartuBuangan();
+            updateInfoGiliran();
+
+            if (!state.status.giliranPemain) jadwalinGiliranBot();
+        }
+
+        function tampilinKartuTangan() {
+            const pContainer = document.getElementById('area-tangan-pemain');
+            const bContainer = document.getElementById('area-tangan-bot');
+            pContainer.innerHTML = '';
+            bContainer.innerHTML = '';
+
+            state.tangan.player.forEach((card, idx) => {
+                const el = document.createElement('div');
+                el.className = 'kartu';
+                el.style.backgroundImage = `url('${card.img}')`;
+                el.style.zIndex = idx;
+                el.onclick = () => pemainJalan(idx);
+                pContainer.appendChild(el);
+            });
+
+            state.tangan.bot.forEach((_, idx) => {
+                const el = document.createElement('div');
+                el.className = 'kartu';
+                el.style.backgroundImage = "url('./img/UNO/Behind Kartu.png')";
+                el.style.zIndex = idx;
+                bContainer.appendChild(el);
+            });
+            rapikanTangan();
+        }
+
+        function tampilinKartuBuangan() {
+            const container = document.getElementById('area-dek-buang');
+            container.innerHTML = '';
+
+            const startIdx = Math.max(0, state.dekBuangan.length - 3);
+            for (let i = startIdx; i < state.dekBuangan.length; i++) {
+                const card = state.dekBuangan[i];
+                const el = document.createElement('div');
+                el.className = 'kartu';
+                el.style.backgroundImage = `url('${card.img}')`;
+                const rot = (i * 12) % 40 - 20;
+                const offset = (i - startIdx) * 2;
+                el.style.transform = `rotate(${rot}deg) translate(${offset}px, ${offset}px)`;
+                container.appendChild(el);
+            }
+        }
+
+        function rapikanTangan() {
+            const screenWidth = window.innerWidth;
+            const maxWidth = screenWidth * 0.95;
+
+            const hands = [
+                { id: 'area-tangan-pemain', origin: 'center bottom' },
+                { id: 'area-tangan-bot', origin: 'center top' }
+            ];
+
+            hands.forEach(h => {
+                const container = document.getElementById(h.id);
+                if (!container || container.children.length === 0) return;
+
+                container.style.transform = 'none';
+                container.style.width = 'auto';
+
+                const cards = Array.from(container.children);
+                const cardStyle = window.getComputedStyle(cards[0]);
+                const cardWidth = parseFloat(cardStyle.width);
+
+                let marginLeft = 0;
+                if (cards.length > 1) {
+                    marginLeft = parseFloat(window.getComputedStyle(cards[1]).marginLeft);
+                }
+
+                const oneCardStrip = cardWidth + marginLeft;
+                const totalWidth = (cards.length - 1) * oneCardStrip + cardWidth;
+
+                if (totalWidth > maxWidth) {
+                    const scale = maxWidth / totalWidth;
+                    container.style.transform = `scale(${scale})`;
+                    container.style.transformOrigin = h.origin;
+                } else {
+                    container.style.transform = 'none';
+                }
+            });
+        }
+
+        function updateInfoGiliran() {
+            const pName = document.getElementById('info-pemain');
+            const bName = document.getElementById('info-bot');
+
+            if (state.status.giliranPemain) {
+                pName.className = 'info-status-pemain status-giliran-aktif';
+                bName.className = 'info-status-pemain status-giliran-pasif';
+                if (!state.status.notifNgetem) tampilinPesan("GILIRAN LO!", 'tipe-giliran');
+            } else {
+                pName.className = 'info-status-pemain status-giliran-pasif';
+                bName.className = 'info-status-pemain status-giliran-aktif';
+                if (!state.status.notifNgetem) tampilinPesan("GILIRAN BOT!", 'tipe-giliran');
+            }
+        }
+
+        function tampilinPesan(msg, type = 'tipe-info', persistent = false) {
+            const t = document.getElementById('pesan-notif');
+            const msgEl = document.getElementById('teks-notif');
+
+            t.classList.remove('tipe-hukuman', 'tipe-giliran', 'tipe-uno', 'tipe-info', 'tipe-sukses');
+
+            t.classList.add(type);
+
+            if (type === 'tipe-uno') {
+                msgEl.innerHTML = `${msg.toUpperCase()} <span class="font-black italic text-2xl ml-2">UNO!</span>`;
+            } else {
+                msgEl.innerText = msg.toUpperCase();
+            }
+
+            t.classList.add('tampil');
+
+            catatKeLog(type === 'tipe-uno' ? `${msg.toUpperCase()} UNO!` : msg);
+
+            if (persistent) {
+                state.status.notifNgetem = true;
+                return;
+            }
+
+            setTimeout(() => {
+                if (!state.status.notifNgetem) {
+                    t.classList.remove('tampil');
+                }
+            }, 10000);
+        }
+
+        function pemainJalan(idx) {
+            if (!state.status.giliranPemain || !state.status.jalan || state.status.lagiSibuk) return;
+
+            const card = state.tangan.player[idx];
+
+            if (card.value === 'draw4') {
+                const hasMatchingColorCard = state.tangan.player.some(c => c.color === state.kartuAktif.warna);
+                if (hasMatchingColorCard) {
+                    tampilinPesan("GABISA +4, MASIH ADA WARNA SAMA!", 'tipe-hukuman');
+                    return;
+                }
+            }
+            if (cekKartuSah(card)) {
+                state.status.lagiSibuk = true;
+
+                state.status.notifNgetem = false;
+                document.getElementById('pesan-notif').classList.remove('tampil');
+
+                jalaninAksiKartu('player', idx);
+            } else {
+                tampilinPesan("KARTU GA COCOK BRO!", 'tipe-hukuman');
+            }
+        }
+
+        function cekKartuSah(card) {
+            return card.color === state.kartuAktif.warna ||
+                card.value === state.kartuAktif.nilai ||
+                card.color === KONFIGURASI.TIPE_KARTU.HITAM;
+        }
+
+        async function jalaninAksiKartu(target, idx) {
+            const hand = target === 'player' ? state.tangan.player : state.tangan.bot;
+            const card = hand[idx];
+
+            await animasiLemparKartu(target, idx, card);
+
+            hand.splice(idx, 1);
+            state.dekBuangan.push(card);
+            tampilinKartuTangan();
+            tampilinKartuBuangan();
+
+            if (hand.length === 1) {
+                const player = target === 'player' ? 'PEMAIN' : 'KOMPUTER';
+                tampilinPesan(player + " TERIAK", 'tipe-uno');
+            }
+            if (hand.length === 0) {
+                gameSelesai(target);
+                return;
+            }
+
+            if (card.value === 'draw4') {
+                if (target === 'player') {
+                    bukaPopupWarna(card.value);
+                } else {
+                    state.infoTantangan = {
+                        offendingHand: [...state.tangan.bot],
+                        colorBeforePlay: state.kartuAktif.warna
+                    };
+                    document.getElementById('popup-tantangan').classList.add('tampil');
+                }
+                return;
+            }
+
+            if (card.color === KONFIGURASI.TIPE_KARTU.HITAM) {
+                if (card.value === '67') {
+                    await jalaninEfekKartu(card.value, target);
+                    if (target === 'player') state.status.lagiSibuk = false;
+                    return;
+                }
+
+                if (target === 'player') {
+                    bukaPopupWarna(card.value);
+                    return;
+                } else {
+                    if (card.value === 'wild') {
+                        state.kartuAktif.warna = botPilihWarna();
+                        tampilinPesan(`KOMPUTER PILIH WARNA ${state.kartuAktif.warna}`, 'tipe-info', true);
+                        tampilinPesan(`BOT MINTA WARNA ${state.kartuAktif.warna}`, 'tipe-info', true);
+                    }
+                    await jalaninEfekKartu(card.value, 'bot');
+                }
+            } else {
+                state.kartuAktif.warna = card.color;
+                state.kartuAktif.nilai = card.value;
+                await jalaninEfekKartu(card.value, target);
+                if (target === 'player') state.status.lagiSibuk = false;
+            }
+        }
+
+        async function animasiLemparKartu(target, idx, cardData) {
+            const handId = target === 'player' ? 'area-tangan-pemain' : 'area-tangan-bot';
+            const handEl = document.getElementById(handId);
+            if (!handEl || !handEl.children[idx]) return;
+
+            const cardEl = handEl.children[idx];
+            const rect = cardEl.getBoundingClientRect();
+
+
+            const clone = document.createElement('div');
+            clone.className = 'kartu';
+            clone.style.backgroundImage = cardEl.style.backgroundImage;
+            clone.style.position = 'fixed';
+            clone.style.left = rect.left + 'px';
+            clone.style.top = rect.top + 'px';
+            clone.style.width = rect.width + 'px';
+            clone.style.height = rect.height + 'px';
+            clone.style.zIndex = 9999;
+            clone.style.transition = 'all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            clone.style.transformOrigin = 'center center';
+            clone.style.boxShadow = '0 20px 50px rgba(0,0,0,0.5)';
+
+            document.body.appendChild(clone);
+
+
+            if (target === 'bot' && cardData) {
+                clone.style.backgroundImage = `url('${cardData.img}')`;
+            }
+
+
+            cardEl.style.opacity = '0';
+
+            const discardEl = document.getElementById('area-dek-buang');
+            const discardRect = discardEl.getBoundingClientRect();
+
+
+            clone.offsetHeight;
+            const randAngle = Math.random() * 40 - 20;
+            const randX = Math.random() * 20 - 10;
+            const randY = Math.random() * 20 - 10;
+
+            clone.style.left = (discardRect.left + randX) + 'px';
+            clone.style.top = (discardRect.top + randY) + 'px';
+            clone.style.transform = `rotate(${randAngle}deg) scale(1)`;
+
+            await tunggu(400);
+            clone.remove();
+        }
+
+        async function jalaninEfekKartu(value, attacker) {
+            const victim = attacker === 'player' ? 'bot' : 'player';
+            let skipNext = false;
+
+            switch (value) {
+                case "skip":
+                case "reverse":
+                    skipNext = true;
+                    tampilinPesan(value.toUpperCase() + " DULU BOS!", 'tipe-info');
+                    break;
+                case "draw2":
+                    await pemainAmbilKartu(victim, 2);
+                    skipNext = true;
+                    tampilinPesan("MAKAN TUH +2!", 'tipe-hukuman');
+                    break;
+                case "draw4":
+                    await pemainAmbilKartu(victim, 4);
+                    skipNext = true;
+                    tampilinPesan(`PEDIH! +4 WARNA ${state.kartuAktif.warna}`, 'tipe-hukuman');
+                    break;
+                case "67":
+                    tampilinPesan("GACHA TIME! 6 ATAU 7?", 'tipe-info');
+                    const playerDrawCount = playerGets6 ? 6 : 7;
+                    const botDrawCount = playerGets6 ? 7 : 6;
+
+                    await tunggu(1200);
+
+                    tampilinPesan(`LU DAPET ${playerDrawCount}, BOT DAPET ${botDrawCount}.`, 'tipe-hukuman');
+
+                    await pemainAmbilKartu('player', playerDrawCount);
+                    await pemainAmbilKartu('bot', botDrawCount);
+                    break;
+            }
+
+            if (!skipNext) {
+                state.status.giliranPemain = !state.status.giliranPemain;
+            }
+
+            updateInfoGiliran();
+            if (!state.status.giliranPemain) jadwalinGiliranBot();
+        }
+
+        async function pemainAmbilKartu(target, count) {
+            const hand = target === 'player' ? state.tangan.player : state.tangan.bot;
+            for (let i = 0; i < count; i++) {
+                if (state.dek.length === 0) {
+                    if (state.dekBuangan.length > 1) {
+                        const top = state.dekBuangan.pop();
+                        state.dek = kocokDek(state.dekBuangan);
+                        state.dekBuangan = [top];
+                        tampilinKartuBuangan();
+                    } else {
+                        break;
+                    }
+                }
+                await animasiAmbilKartu(target);
+                hand.push(state.dek.pop());
+                tampilinKartuTangan();
+            }
+        }
+
+        async function animasiAmbilKartu(target) {
+            const drawStack = document.querySelector('.dek-ambil');
+            const startRect = drawStack.getBoundingClientRect();
+            const handId = target === 'player' ? 'area-tangan-pemain' : 'area-tangan-bot';
+            const handEl = document.getElementById(handId);
+            const handRect = handEl.getBoundingClientRect();
+
+            const clone = document.createElement('div');
+            clone.className = 'kartu';
+            clone.style.backgroundImage = "url('./img/UNO/Behind Kartu.png')";
+            clone.style.position = 'fixed';
+            clone.style.left = startRect.left + 'px';
+            clone.style.top = startRect.top + 'px';
+            clone.style.width = startRect.width + 'px';
+            clone.style.height = startRect.height + 'px';
+            clone.style.zIndex = 9999;
+            clone.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            clone.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+
+            document.body.appendChild(clone);
+
+            clone.offsetHeight;
+
+            const targetX = handRect.left + (handRect.width / 2) - (startRect.width / 2);
+            const targetY = handRect.top;
+
+            clone.style.left = targetX + 'px';
+            clone.style.top = targetY + 'px';
+            clone.style.transform = `rotate(${Math.random() * 10 - 5}deg)`;
+
+            await tunggu(500);
+            clone.remove();
+        }
+
+        function pemainKlikAmbilKartu() {
+            if (!state.status.giliranPemain || !state.status.jalan || state.status.lagiSibuk) return;
+            state.status.lagiSibuk = true;
+            pemainAmbilKartu('player', 1).then(() => {
+                state.status.giliranPemain = false;
+                updateInfoGiliran();
+                state.status.lagiSibuk = false;
+                jadwalinGiliranBot();
+            });
+        }
+
+        function botPilihWarna() {
+            return KONFIGURASI.WARNA[Math.floor(Math.random() * KONFIGURASI.WARNA.length)];
+        }
+
+        function jadwalinGiliranBot() {
+            if (!state.status.jalan) return;
+
+            const el = document.getElementById('indikator-berpikir');
+            if (el) {
+                el.classList.remove('hidden');
+                el.classList.add('indikator-ngetik');
+            }
+
+            const delay = KONFIGURASI.DELAY_BOT.MIN + Math.random() * (KONFIGURASI.DELAY_BOT.MAX - KONFIGURASI.DELAY_BOT.MIN);
+            setTimeout(botJalan, delay);
+        }
+
+        async function botJalan() {
+            const el = document.getElementById('indikator-berpikir');
+            if (el) {
+                el.classList.add('hidden');
+                el.classList.remove('indikator-ngetik');
+            }
+
+            if (!state.status.jalan || state.status.giliranPemain) return;
+
+            if (Math.random() < KONFIGURASI.PELUANG_SALAH_BOT) {
+                const adaKartuJalan = state.tangan.bot.some(card => cekKartuSah(card));
+                if (adaKartuJalan) {
+                    tampilinPesan("KOMPUTER TERLIHAT RAGU...", 'tipe-info');
+                    await tunggu(1000);
+                    await pemainAmbilKartu('bot', 1);
+                    state.status.giliranPemain = true;
+                    updateInfoGiliran();
+                    return;
+                }
+            }
+
+            const validMoves = [];
+            state.tangan.bot.forEach((card, index) => {
+                if (cekKartuSah(card)) {
+                    validMoves.push({ index, card });
+                }
+            });
+
+            if (validMoves.length > 0) {
+                const randomIndex = Math.floor(Math.random() * validMoves.length);
+                jalaninAksiKartu('bot', validMoves[randomIndex].index);
+            } else {
+                tampilinPesan("BOT NGAMBIL KARTU", 'tipe-info');
+                await pemainAmbilKartu('bot', 1);
+
+                const newCardIdx = state.tangan.bot.length - 1;
+                const newCard = state.tangan.bot[newCardIdx];
+
+                if (cekKartuSah(newCard)) {
+                    await tunggu(600);
+                    await tunggu(400);
+                    jalaninAksiKartu('bot', newCardIdx);
+                } else {
+                    state.status.giliranPemain = true;
+                    updateInfoGiliran();
+                }
+            }
+        }
+
+
+        async function prosesTantangan(playerChallenges) {
+            document.getElementById('popup-tantangan').classList.remove('tampil');
+            const { offendingHand, colorBeforePlay } = state.infoTantangan;
+
+            const wasIllegalPlay = offendingHand.some(card => card.color === colorBeforePlay);
+
+            if (playerChallenges) {
+                if (wasIllegalPlay) {
+                    tampilinPesan("NAH KAN! BOT KENA +4!", 'tipe-sukses');
+                    await pemainAmbilKartu('bot', 4);
+                    state.status.giliranPemain = true;
+                    updateInfoGiliran();
+                } else {
+                    tampilinPesan("YAH SALAH NUDUH! LU KENA +6!", 'tipe-hukuman');
+                    await pemainAmbilKartu('player', 6);
+                    state.kartuAktif.warna = botPilihWarna();
+                    state.kartuAktif.nilai = 'draw4';
+                    tampilinPesan(`BOT MINTA WARNA ${state.kartuAktif.warna}`, 'tipe-info', true);
+                    state.status.giliranPemain = false;
+                    updateInfoGiliran();
+                    jadwalinGiliranBot();
+                }
+            } else {
+                tampilinPesan("NASIB... LU KENA +4!", 'tipe-hukuman');
+                await pemainAmbilKartu('player', 4);
+                state.kartuAktif.warna = botPilihWarna();
+                state.kartuAktif.nilai = 'draw4';
+                tampilinPesan(`BOT MINTA WARNA ${state.kartuAktif.warna}`, 'tipe-info', true);
+                state.status.giliranPemain = false;
+                updateInfoGiliran();
+                jadwalinGiliranBot();
+            }
+
+            state.infoTantangan = {};
+        }
+
+        function bukaPopupWarna(val) {
+            state.nilaiWildNunggu = val;
+            document.getElementById('popup-pilih-warna').classList.add('tampil');
+        }
+
+        async function pilihWarnaWild(color) {
+            state.kartuAktif.warna = color;
+            document.getElementById('popup-pilih-warna').classList.remove('tampil');
+            tampilinPesan("GANTI WARNA: " + color, 'tipe-info');
+            await jalaninEfekKartu(state.nilaiWildNunggu, 'player');
+            state.status.lagiSibuk = false;
+        }
+
+        function jedaGame() {
+            const m = document.getElementById('popup-jeda');
+            m.classList.toggle('tampil');
+        }
+
+        function gantiLayarPenuh() {
+            const elem = document.documentElement;
+            const btnIcon = document.querySelector('#fs-btn i');
+
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            const btnIcon = document.querySelector('#fs-btn i');
+            if (document.fullscreenElement) {
+                btnIcon.classList.replace('fa-expand', 'fa-compress');
+            } else {
+                btnIcon.classList.replace('fa-compress', 'fa-expand');
+            }
+        });
+
+        function gameSelesai(winner) {
+            state.status.jalan = false;
+            const modal = document.getElementById('popup-menang');
+            const title = document.getElementById('judul-kemenangan');
+
+            if (winner === 'player') {
+                title.innerText = "GG! LU MENANG!";
+                title.style.color = "var(--uno-green)";
+            } else {
+                title.innerText = "YAH... BOT MENANG!";
+                title.style.color = "var(--uno-red)";
+            }
+
+            const bContainer = document.getElementById('area-tangan-bot');
+            bContainer.innerHTML = '';
+            state.tangan.bot.forEach(card => {
+                const el = document.createElement('div');
+                el.className = 'kartu';
+                el.style.backgroundImage = `url('${card.img}')`;
+                bContainer.appendChild(el);
+            });
+
+            setTimeout(() => modal.classList.add('tampil'), 1500);
+        }
+
+        function tunggu(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+        const bgm = document.getElementById('bgm');
+        const vSlider = document.getElementById('bgmVolume');
+        const vToggle = document.getElementById('bgmToggle');
+
+        vSlider.oninput = (e) => {
+            bgm.volume = e.target.value / 100;
+            document.getElementById('bgmValue').innerText = e.target.value + "%";
+        };
+
+        vToggle.onclick = () => {
+            if (bgm.paused) {
+                bgm.play();
+                vToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+            } else {
+                bgm.pause();
+                vToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            }
+        };
+
+        const historyToggle = document.getElementById('tombol-log');
+        historyToggle.addEventListener('click', () => {
+            const log = document.getElementById('catatan-log');
+            log.classList.toggle('tampil');
+
+            if (!log.classList.contains('tampil')) {
+                state.riwayatLog.forEach(item => item.read = true);
+                setTimeout(tampilinLog, 500);
+            }
+        });
+
+        function catatKeLog(msg) {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+
+            state.riwayatLog.unshift({
+                msg: msg.toUpperCase(),
+                read: false,
+                time: timeStr
+            });
+
+            if (state.riwayatLog.length > 20) {
+                state.riwayatLog.pop();
+            }
+            tampilinLog();
+        }
+
+        function tampilinLog() {
+            const contentArea = document.getElementById('isi-log');
+            contentArea.innerHTML = state.riwayatLog.map(item => `
+                <div class="entri-log ${item.read ? '' : 'baru'}">
+                    <span>${item.read ? '' : '<i class="fas fa-circle text-red-500 text-xs mr-2"></i>'}${item.msg}</span>
+                    <span class="waktu-log">${item.time}</span>
+                </div>
+            `).join('');
+        }
+
+        window.onload = mulaiGame;
+    </script>
+</body>
+
+</html>
