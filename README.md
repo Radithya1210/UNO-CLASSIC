@@ -2,6 +2,10 @@
 
 Game UNO berbasis web dengan mekanisme Random Number Generator (RNG) yang menghadirkan gameplay seru dan tidak terduga. Project ini dibuat untuk mengembangkan kemampuan dalam pembuatan game interaktif berbasis website, serta merupakan tugas akhir mata pelajaran Informatika saat kelas 9 SMP.
 
+<p align="center">
+  <img src="https://radithya1210.github.io/Radithya-Putra-Pratama-Official-Portfolio/assets/img/UNO-GAMES.png" alt="UNO-GAMES">
+</p>
+
 ## 🚀 Demo
 Mainkan sekarang melalui link berikut:  
 👉 https://radithya1210.github.io/UNO-CLASSIC/
