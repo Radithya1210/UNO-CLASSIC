@@ -1,68 +1,73 @@
-# 🎮 UNO Classic Web Game
-
-Game UNO berbasis web dengan mekanisme Random Number Generator (RNG) yang menghadirkan gameplay seru dan tidak terduga. Project ini dibuat untuk mengembangkan kemampuan dalam pembuatan game interaktif berbasis website, serta merupakan tugas akhir mata pelajaran Informatika saat kelas 9 SMP.
+# 🎮 UNO Classic Web Game  
+### 🚀 Web-Based UNO Game with RNG System
 
 <p align="center">
-  <img src="https://radithya1210.github.io/Radithya-Putra-Pratama-Official-Portfolio/assets/img/UNO-GAMES.png" alt="UNO-GAMES">
+  <img src="https://radithya1210.github.io/Radithya-Putra-Pratama-Official-Portfolio/assets/img/UNO-GAMES.png" width="80%" alt="UNO Game Preview">
 </p>
 
-## 🚀 Demo
-Mainkan sekarang melalui link berikut:  
-👉 https://radithya1210.github.io/UNO-CLASSIC/
-
-## ✨ Fitur Utama
-- 🃏 Game ini menghadirkan gameplay UNO klasik yang mudah dipahami dan seru dimainkan.  
-- 🎲 Sistem Random Number Generator (RNG) digunakan untuk memastikan permainan berjalan secara acak dan adil.  
-- 🖥️ Tampilan antarmuka dirancang interaktif agar pengalaman bermain lebih menarik.  
-- ⚡ Game ini ringan sehingga dapat dimainkan langsung di browser tanpa perlu instalasi.  
-- 🎯 Cocok digunakan untuk hiburan sekaligus eksplorasi logika game.  
-
-## 🛠️ Teknologi yang Digunakan
-- HTML digunakan untuk membangun struktur dasar game.  
-- CSS digunakan untuk mengatur tampilan dan desain antarmuka.  
-- JavaScript digunakan untuk mengatur logika permainan dan interaksi.  
-
-## 📦 Cara Menjalankan Project
-- Clone repository menggunakan perintah `git clone https://github.com/username/UNO-CLASSIC.git`.  
-- Masuk ke folder project dengan perintah `cd UNO-CLASSIC`.  
-- Buka file `index.html` di browser untuk menjalankan game.  
-
-## 🎯 Tujuan Project
-- Project ini dibuat untuk mengembangkan skill dalam pembuatan game berbasis web.  
-- Project ini juga bertujuan untuk memahami logika permainan dan sistem random.  
-- Selain itu, project ini digunakan untuk melatih desain UI yang interaktif.  
+<p align="center">
+  <a href="https://radithya1210.github.io/UNO-CLASSIC/">
+    <img src="https://img.shields.io/badge/Play%20Game-Open%20Now-blue?style=for-the-badge">
+  </a>
+  <img src="https://img.shields.io/badge/Made%20with-HTML%20%7C%20CSS%20%7C%20JS-orange?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge">
+</p>
 
 ---
 
-# 🎮 UNO Classic Web Game
+## 🇮🇩 Deskripsi
+
+Game UNO berbasis web dengan mekanisme Random Number Generator (RNG) yang menghadirkan gameplay seru dan tidak terduga. Project ini dibuat untuk mengembangkan kemampuan dalam pembuatan game interaktif berbasis website, serta merupakan tugas akhir mata pelajaran Informatika saat kelas 9 SMP.
+
+### ✨ Fitur Utama
+- 🃏 Game ini menghadirkan gameplay UNO klasik yang mudah dipahami dan seru dimainkan.  
+- 🎲 Sistem RNG digunakan untuk memastikan permainan berjalan secara acak dan adil.  
+- 🖥️ Antarmuka dirancang interaktif untuk pengalaman bermain yang lebih menarik.  
+- ⚡ Game ringan dan dapat dimainkan langsung di browser tanpa instalasi.  
+- 🎯 Cocok untuk hiburan sekaligus eksplorasi logika game.  
+
+### 🛠️ Teknologi
+- HTML digunakan untuk membangun struktur dasar game.  
+- CSS digunakan untuk mengatur tampilan dan desain.  
+- JavaScript digunakan untuk logika permainan dan interaksi.  
+
+### 📦 Cara Menjalankan
+- Clone repository dengan `git clone https://github.com/username/UNO-CLASSIC.git`.  
+- Masuk ke folder project dengan `cd UNO-CLASSIC`.  
+- Buka `index.html` di browser.  
+
+### 🎯 Tujuan
+- Mengembangkan skill pembuatan game berbasis web.  
+- Memahami logika permainan dan sistem random.  
+- Melatih desain UI interaktif.  
+
+---
+
+## 🇬🇧 Description
 
 A web-based UNO game powered by a Random Number Generator (RNG) system, delivering fun and unpredictable gameplay. This project was created to improve skills in building interactive web-based games, and it also serves as a final project for Informatics class in 9th grade junior high school.
 
-## 🚀 Demo
-Play the game using the following link:  
-👉 https://radithya1210.github.io/UNO-CLASSIC/
+### ✨ Features
+- 🃏 Features classic UNO gameplay that is easy to understand and fun to play.  
+- 🎲 Uses an RNG system to ensure fair and unpredictable gameplay.  
+- 🖥️ Interactive user interface for a better experience.  
+- ⚡ Lightweight and playable directly in the browser without installation.  
+- 🎯 Suitable for entertainment and exploring game logic.  
 
-## ✨ Features
-- 🃏 This game features classic UNO gameplay that is easy to understand and fun to play.  
-- 🎲 A Random Number Generator (RNG) system is used to ensure fair and unpredictable gameplay.  
-- 🖥️ The user interface is designed to be interactive for a better gaming experience.  
-- ⚡ The game is lightweight and can be played directly in the browser without installation.  
-- 🎯 It is suitable for entertainment as well as exploring game logic.  
+### 🛠️ Technologies
+- HTML for the basic structure.  
+- CSS for styling and layout.  
+- JavaScript for game logic and interactions.  
 
-## 🛠️ Technologies Used
-- HTML is used to build the basic structure of the game.  
-- CSS is used to design and style the user interface.  
-- JavaScript is used to handle game logic and interactions.  
-
-## 📦 How to Run
+### 📦 How to Run
 - Clone the repository using `git clone https://github.com/username/UNO-CLASSIC.git`.  
-- Navigate to the project folder using `cd UNO-CLASSIC`.  
-- Open the `index.html` file in your browser to run the game.  
+- Navigate to the project folder with `cd UNO-CLASSIC`.  
+- Open `index.html` in your browser.  
 
-## 🎯 Purpose
-- This project was created to improve web-based game development skills.  
-- It also aims to help understand game logic and randomness systems.  
-- Additionally, it is used to practice interactive UI design.  
+### 🎯 Purpose
+- Improve web-based game development skills.  
+- Understand game logic and randomness systems.  
+- Practice interactive UI design.  
 
 ---
 
